@@ -17,7 +17,7 @@ MonoBehaviour:
   mass: 1.5
   radius: 0.25
   restitution: 0.2
-  isMagnetic: 0
+  isMagnetic: 1
   isFragile: 1
   breakThreshold: 5
   score: 100

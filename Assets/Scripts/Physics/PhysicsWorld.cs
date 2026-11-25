@@ -17,6 +17,9 @@ public class PhysicsWorld : MonoBehaviour
     private List<PhysicsBox> boxes =
     new List<PhysicsBox>();
 
+    private List<Magnet> magnets =
+    new List<Magnet>();
+
     private ProductCollector[] collectors;
 
     private void Start()
@@ -33,10 +36,17 @@ public class PhysicsWorld : MonoBehaviour
             RegisterBox(box);
         }
 
+        magnets.AddRange(
+            FindObjectsByType<Magnet>(
+                FindObjectsSortMode.None)
+        );
+
         collectors = FindObjectsByType<ProductCollector>(
             FindObjectsSortMode.None
         );
     }
+
+    #region Registration
 
     public void RegisterBody(PhysicsBody body)
     {
@@ -65,9 +75,24 @@ public class PhysicsWorld : MonoBehaviour
         boxes.Remove(box);
     }
 
+    public void RegisterMagnet(Magnet magnet)
+    {
+        if (!magnets.Contains(magnet))
+            magnets.Add(magnet);
+    }
+
+    public void UnregisterMagnet(Magnet magnet)
+    {
+        magnets.Remove(magnet);
+    }
+    #endregion
 
     private void FixedUpdate()
     {
+        // 1. 힘 적용 2. Integrate (가속도 -> 속도 -> 위치 갱신)
+        // 3. collision detection 4. collision response
+        // 5. 접속 장치 처리 6. 제품 수거 검사
+
         int steps = Mathf.Max(1, substeps);
         float dt = Time.fixedDeltaTime / steps;
 
@@ -85,7 +110,8 @@ public class PhysicsWorld : MonoBehaviour
         {
             PhysicsBody body = bodies[i];
 
-            if (body == null)
+            if (body == null ||
+               !body.isActiveAndEnabled)
                 continue;
 
             if (!body.TryGetComponent<Product>(
@@ -95,7 +121,8 @@ public class PhysicsWorld : MonoBehaviour
             foreach (ProductCollector collector
                      in collectors)
             {
-                if (collector == null)
+                if (collector == null ||
+                    !collector.isActiveAndEnabled)
                     continue;
 
                 collector.CheckProduct(product);
@@ -114,12 +141,27 @@ public class PhysicsWorld : MonoBehaviour
     {
         foreach (PhysicsBody body in bodies)
         {
-            if (body == null)
+            if (body == null ||
+            !body.isActiveAndEnabled)
                 continue;
 
+            // 1. 중력
             body.AddForce(gravity * body.mass);
+
+            // 2. 전자석
+            foreach (Magnet magnet in magnets)
+            {
+                if (magnet == null ||
+                    !magnet.isActiveAndEnabled)
+                    continue;
+
+                magnet.ApplyMagnet(body);
+            }
+
+            // 3. 물리 운동
             body.Integrate(dt);
 
+            // 4. 충돌 검사
             foreach (PhysicsBox box in boxes)
             {
                 if (box == null)
@@ -133,23 +175,55 @@ public class PhysicsWorld : MonoBehaviour
                 if (!collision.isColliding)
                     continue;
 
-                // 기존 충돌 반응
+                // 5. 충돌 반응
                 CollisionResolver.Resolve(
                     body, box, collision
                 );
 
-                // 신규: 컨베이어 접촉 처리
-                if (box.TryGetComponent<Conveyor>(
-                    out Conveyor conveyor))
-                {
-                    conveyor.ApplyConveyor(
-                        body, collision, dt
-                    );
-                }
+                // 6. 접촉 장치 처리
+                ApplyContactDevices(
+                    body, box, collision, dt
+                );
             }
         }
-
-
     }
+        
+    private void ApplyContactDevices(
+        PhysicsBody body,
+        PhysicsBox box,
+        CollisionInfo collision,
+        float dt)
+    {
+        // 컨베이어
+        if (box.TryGetComponent<Conveyor>(
+            out Conveyor conveyor)
+            && conveyor.isActiveAndEnabled)
+        {
+            conveyor.ApplyConveyor(
+                body, collision, dt
+            );
+        }
+
+        // 발사기
+        if (box.TryGetComponent<Launcher>(
+            out Launcher launcher)
+            && launcher.isActiveAndEnabled)
+        {
+            launcher.ApplyLauncher(
+                body, collision
+            );
+        }
+
+        // 감속판
+        if (box.TryGetComponent<FrictionPlate>(
+            out FrictionPlate frictionPlate)
+            && frictionPlate.isActiveAndEnabled)
+        {
+            frictionPlate.ApplyFriction(
+                body, collision, gravity, dt
+            );
+        }
+    }
+
 
 }

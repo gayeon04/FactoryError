@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class PhysicsWorld : MonoBehaviour
@@ -16,17 +17,24 @@ public class PhysicsWorld : MonoBehaviour
     private List<PhysicsBox> boxes =
     new List<PhysicsBox>();
 
+    private ProductCollector[] collectors;
+
     private void Start()
     {
-        bodies.AddRange(
-            FindObjectsByType<PhysicsBody>(
-                FindObjectsSortMode.None
-            )
-        );
-        boxes.AddRange(
-            FindObjectsByType<PhysicsBox>(
-                FindObjectsSortMode.None
-            )
+        foreach (PhysicsBody body in
+            FindObjectsByType<PhysicsBody>(FindObjectsSortMode.None))
+        {
+            RegisterBody(body);
+        }
+
+        foreach (PhysicsBox box in
+            FindObjectsByType<PhysicsBox>(FindObjectsSortMode.None))
+        {
+            RegisterBox(box);
+        }
+
+        collectors = FindObjectsByType<ProductCollector>(
+            FindObjectsSortMode.None
         );
     }
 
@@ -34,6 +42,11 @@ public class PhysicsWorld : MonoBehaviour
     {
         if (!bodies.Contains(body))
             bodies.Add(body);
+
+        UnityEngine.Debug.Log(
+                $"Register: {body.GetInstanceID()}, " +
+                $"Total: {bodies.Count}"
+            );
     }
 
     public void UnregisterBody(PhysicsBody body)
@@ -61,8 +74,41 @@ public class PhysicsWorld : MonoBehaviour
         for (int i = 0; i < steps; i++)
         {
             Simulate(dt);
+
+            CheckCollectors();
         }
     }
+
+    private void CheckCollectors()
+    {
+        for (int i = bodies.Count - 1; i >= 0; i--)
+        {
+            PhysicsBody body = bodies[i];
+
+            if (body == null)
+                continue;
+
+            if (!body.TryGetComponent<Product>(
+                out Product product))
+                continue;
+
+            foreach (ProductCollector collector
+                     in collectors)
+            {
+                if (collector == null)
+                    continue;
+
+                collector.CheckProduct(product);
+
+                if (product.IsCollected)
+                    break;
+            }
+        }
+    }
+
+
+
+
 
     private void Simulate(float dt)
     {
@@ -71,11 +117,9 @@ public class PhysicsWorld : MonoBehaviour
             if (body == null)
                 continue;
 
-            // 물리 운동
             body.AddForce(gravity * body.mass);
             body.Integrate(dt);
 
-            // 충돌 검사
             foreach (PhysicsBox box in boxes)
             {
                 if (box == null)
@@ -89,10 +133,23 @@ public class PhysicsWorld : MonoBehaviour
                 if (!collision.isColliding)
                     continue;
 
+                // 기존 충돌 반응
                 CollisionResolver.Resolve(
                     body, box, collision
                 );
+
+                // 신규: 컨베이어 접촉 처리
+                if (box.TryGetComponent<Conveyor>(
+                    out Conveyor conveyor))
+                {
+                    conveyor.ApplyConveyor(
+                        body, collision, dt
+                    );
+                }
             }
         }
+
+
     }
+
 }

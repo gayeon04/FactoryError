@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 // deviceData 선택, ghost 생성, 마우스 위치 추적, 설치 가능 여부 검사, 실제 장치 생성
 
@@ -35,6 +36,13 @@ public class BuildManager : MonoBehaviour
 
     private List<PlacedDevice> placedDevices =
         new List<PlacedDevice>();
+
+    public BudgetManager budgetManager;
+
+    public event Action<PlacedDevice> OnDeviceSelected;
+
+    public PlacedDevice SelectedDevice =>
+        selectedDevice;
 
     private void Update()
     {
@@ -87,6 +95,18 @@ public class BuildManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Delete))
             DeleteSelectedDevice();
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            MoveSelectedDevice(Vector2.up);
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            MoveSelectedDevice(Vector2.down);
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            MoveSelectedDevice(Vector2.left);
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            MoveSelectedDevice(Vector2.right);
     }
 
     public void SelectDevice(int index)
@@ -183,6 +203,14 @@ public class BuildManager : MonoBehaviour
         GameObject target,
         PhysicsBox targetBox)
     {
+
+        if (target == ghost &&
+            selectedData != null &&
+            !budgetManager.CanAfford(selectedData.cost))
+        {
+            return false;
+        }
+
         Vector2 center = target.transform.position;
 
         // 회전된 사각형의 월드 X/Y 범위
@@ -264,10 +292,14 @@ public class BuildManager : MonoBehaviour
         return true;
     }
 
+
     private void PlaceDevice()
     {
         if (!validPlacement ||
             selectedData == null)
+            return;
+
+        if (!budgetManager.TrySpend(selectedData.cost))
             return;
 
         GameObject obj = Instantiate(
@@ -289,6 +321,7 @@ public class BuildManager : MonoBehaviour
 
         UpdateGhost();
     }
+
 
     private void SelectPlacedDevice()
     {
@@ -337,6 +370,11 @@ public class BuildManager : MonoBehaviour
 
             selectedDevice = device;
 
+
+            selectedDevice.SetSelected(true);
+
+            OnDeviceSelected?.Invoke(selectedDevice);
+
             Debug.Log(
                 "Selected: " +
                 selectedDevice.Data.deviceName
@@ -377,21 +415,34 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+
     public void DeleteSelectedDevice()
     {
         if (!canBuild || selectedDevice == null)
             return;
 
-        placedDevices.Remove(selectedDevice);
+        PlacedDevice device = selectedDevice;
 
-        selectedDevice.RemoveDevice();
+        int refund = device.Data.cost;
 
         ClearSelection();
+
+        placedDevices.Remove(device);
+
+        device.RemoveDevice();
+
+        budgetManager.Refund(refund);
     }
+
 
     public void ClearSelection()
     {
+        if (selectedDevice != null)
+            selectedDevice.SetSelected(false);
+
         selectedDevice = null;
+
+        OnDeviceSelected?.Invoke(null);
     }
 
     public void CancelPlacement()
@@ -436,5 +487,28 @@ public class BuildManager : MonoBehaviour
             (Vector3)center,
             (Vector3)size
         );
+    }
+
+
+    private void MoveSelectedDevice(Vector2 direction)
+    {
+        if (!canBuild || selectedDevice == null)
+            return;
+
+        Transform target = selectedDevice.transform;
+
+        Vector3 previousPosition = target.position;
+
+        target.position +=
+            (Vector3)(direction * gridSize);
+
+        PhysicsBox box =
+            selectedDevice.GetComponent<PhysicsBox>();
+
+        if (!ValidatePlacement(
+            selectedDevice.gameObject, box))
+        {
+            target.position = previousPosition;
+        }
     }
 }

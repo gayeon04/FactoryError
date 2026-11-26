@@ -9,6 +9,9 @@ public class PlacedDevice : MonoBehaviour
     private PhysicsBox physicsBox;
     private Magnet magnet;
 
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+
     public void Initialize(
         DeviceData data,
         PhysicsWorld world)
@@ -50,5 +53,23 @@ public class PlacedDevice : MonoBehaviour
     private void OnDestroy()
     {
         Unregister();
+    }
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+            originalColor = spriteRenderer.color;
+    }
+
+    public void SetSelected(bool value)
+    {
+        if (spriteRenderer == null)
+            return;
+
+        spriteRenderer.color = value
+            ? Color.Lerp(originalColor, Color.yellow, 0.6f)
+            : originalColor;
     }
 }

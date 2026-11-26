@@ -91,4 +91,48 @@ public static class CollisionDetector
             penetration = radius + depth
         };
     }
+
+
+    public static bool OBBOverlap(
+        PhysicsBox a, PhysicsBox b)
+    {
+        Vector2 centerDiff = b.Center - a.Center;
+
+        Vector2[] axes =
+        {
+        a.AxisX,
+        a.AxisY,
+        b.AxisX,
+        b.AxisY
+    };
+
+        foreach (Vector2 axis in axes)
+        {
+            float distance = Mathf.Abs(
+                Vector2.Dot(centerDiff, axis)
+            );
+
+            float radiusA = ProjectRadius(a, axis);
+            float radiusB = ProjectRadius(b, axis);
+
+            // 분리축이 하나라도 존재하면
+            // 두 사각형은 겹치지 않음
+            if (distance >= radiusA + radiusB - 0.001f)
+                return false;
+        }
+
+        return true;
+    }
+
+    private static float ProjectRadius(
+        PhysicsBox box, Vector2 axis)
+    {
+        return
+            box.HalfSize.x *
+            Mathf.Abs(Vector2.Dot(box.AxisX, axis))
+
+            + box.HalfSize.y *
+            Mathf.Abs(Vector2.Dot(box.AxisY, axis));
+    }
+
 }

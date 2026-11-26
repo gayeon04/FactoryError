@@ -11,6 +11,10 @@ public class PhysicsWorld : MonoBehaviour
     [Range(1, 8)]
     public int substeps = 4;
 
+    public bool isSimulating = true;
+
+    public IReadOnlyList<PhysicsBox> Boxes => boxes;
+
     private List<PhysicsBody> bodies =
     new List<PhysicsBody>();
 
@@ -92,6 +96,9 @@ public class PhysicsWorld : MonoBehaviour
         // 1. 힘 적용 2. Integrate (가속도 -> 속도 -> 위치 갱신)
         // 3. collision detection 4. collision response
         // 5. 접속 장치 처리 6. 제품 수거 검사
+
+        if (!isSimulating)
+            return;
 
         int steps = Mathf.Max(1, substeps);
         float dt = Time.fixedDeltaTime / steps;

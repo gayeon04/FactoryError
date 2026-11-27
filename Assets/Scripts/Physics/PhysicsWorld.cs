@@ -26,6 +26,12 @@ public class PhysicsWorld : MonoBehaviour
 
     private ProductCollector[] collectors;
 
+    [Header("Waste Settings")]
+    public Vector2 wasteMin = new Vector2(-12f, -6f);
+    public Vector2 wasteMax = new Vector2(12f, 12f);
+
+    public int WastedCount { get; private set; }
+
     private void Start()
     {
         foreach (PhysicsBody body in
@@ -108,6 +114,8 @@ public class PhysicsWorld : MonoBehaviour
             Simulate(dt);
 
             CheckCollectors();
+
+            CheckWaste();
         }
     }
 
@@ -229,6 +237,79 @@ public class PhysicsWorld : MonoBehaviour
             frictionPlate.ApplyFriction(
                 body, collision, gravity, dt
             );
+        }
+    }
+
+    private void CheckWaste()
+    {
+        for (int i = bodies.Count - 1; i >= 0; i--)
+        {
+            PhysicsBody body = bodies[i];
+
+            if (body == null)
+                continue;
+
+            if (!body.TryGetComponent<Product>(
+                out Product product))
+                continue;
+
+            if (product.IsCollected)
+                continue;
+
+            Vector2 position = body.transform.position;
+
+            bool isOutOfBounds =
+                position.x < wasteMin.x ||
+                position.x > wasteMax.x ||
+                position.y < wasteMin.y ||
+                position.y > wasteMax.y;
+
+            if (!isOutOfBounds)
+                continue;
+
+            if (product.TryCollect())
+            {
+                WastedCount++;
+            }
+        }
+    }
+
+
+    public void ResetSimulation()
+    {
+        isSimulating = false;
+
+        // 생성된 제품 제거
+        for (int i = bodies.Count - 1; i >= 0; i--)
+        {
+            PhysicsBody body = bodies[i];
+
+            if (body == null)
+            {
+                bodies.RemoveAt(i);
+                continue;
+            }
+
+            if (body.TryGetComponent<Product>(
+                out Product product))
+            {
+                product.TryCollect();
+            }
+        }
+
+        WastedCount = 0;
+
+        // 발사기 내부 기록 초기화
+        foreach (PhysicsBox box in boxes)
+        {
+            if (box == null)
+                continue;
+
+            if (box.TryGetComponent<Launcher>(
+                out Launcher launcher))
+            {
+                launcher.ResetLauncher();
+            }
         }
     }
 

@@ -19,6 +19,9 @@ public class BuildManager : MonoBehaviour
     public float gridSize = 0.5f;
     public float rotationStep = 15f;
 
+    [Header("Restricted Areas")]
+    public ProductCollector[] collectors;
+
     public Vector2 buildMin = new Vector2(-8, -4);
     public Vector2 buildMax = new Vector2(8, 4);
 
@@ -289,6 +292,34 @@ public class BuildManager : MonoBehaviour
                 return false;
         }
 
+        // Collector 영역 침범 검사
+        foreach (ProductCollector collector in collectors)
+        {
+            if (collector == null)
+                continue;
+
+            Vector2 collectorCenter =
+                collector.transform.position;
+
+            Vector2 collectorHalf =
+                collector.collectSize * 0.5f;
+
+            Vector2 diff = center - collectorCenter;
+
+            bool overlapX =
+                Mathf.Abs(diff.x) <
+                extent.x + collectorHalf.x;
+
+            bool overlapY =
+                Mathf.Abs(diff.y) <
+                extent.y + collectorHalf.y;
+
+            if (overlapX && overlapY)
+                return false;
+        }
+
+        return true;
+
         return true;
     }
 
@@ -510,5 +541,25 @@ public class BuildManager : MonoBehaviour
         {
             target.position = previousPosition;
         }
+    }
+
+    public void ResetAllDevices()
+    {
+        CancelPlacement();
+        ClearSelection();
+
+        for (int i = placedDevices.Count - 1; i >= 0; i--)
+        {
+            PlacedDevice device = placedDevices[i];
+
+            if (device != null)
+            {
+                device.RemoveDevice();
+            }
+        }
+
+        placedDevices.Clear();
+
+        budgetManager.ResetBudget();
     }
 }

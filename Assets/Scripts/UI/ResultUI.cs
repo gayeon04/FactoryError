@@ -23,6 +23,11 @@ public class ResultUI : MonoBehaviour
 
     public TMP_Text remainingBudgetText;
 
+    public StageManager stageManager;
+
+    public GameObject nextStageButton;
+    public GameObject gameCompleteText;
+
     private void OnEnable()
     {
         gameManager.OnStateChanged += OnStateChanged;
@@ -85,5 +90,17 @@ public class ResultUI : MonoBehaviour
         remainingBudgetText.text =
             $"남은 예산 : " +
             $"{budgetManager.CurrentBudget} G";
+
+
+        nextStageButton.SetActive(
+        isClear && stageManager.HasNextStage
+    );
+
+            if (gameCompleteText != null)
+            {
+                gameCompleteText.SetActive(
+                    isClear && !stageManager.HasNextStage
+                );
+            }
     }
 }

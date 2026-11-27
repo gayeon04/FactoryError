@@ -116,5 +116,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchAngle: 45
-  launchSpeed: 10
+  launchSpeed: 9
   cooldown: 0.5

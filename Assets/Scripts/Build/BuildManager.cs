@@ -320,7 +320,6 @@ public class BuildManager : MonoBehaviour
 
         return true;
 
-        return true;
     }
 
 

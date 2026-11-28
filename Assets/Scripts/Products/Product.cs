@@ -67,4 +67,21 @@ public class Product : MonoBehaviour
         if (physicsWorld != null)
             physicsWorld.UnregisterBody(Body);
     }
+
+    public void CheckDamage(float impactSpeed)
+    {
+        if (Data == null ||
+            !Data.isFragile ||
+            IsBroken)
+            return;
+
+        if (impactSpeed >= Data.breakThreshold)
+        {
+            IsBroken = true;
+
+            spriteRenderer.color = Color.red;
+        }
+    }
 }
+
+

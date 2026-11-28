@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productType: 2
   color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
-  mass: 3
+  mass: 1.5
   radius: 0.25
-  restitution: 0.3
-  isMagnetic: 1
-  isFragile: 0
+  restitution: 0.2
+  isMagnetic: 0
+  isFragile: 1
   breakThreshold: 5
   score: 100

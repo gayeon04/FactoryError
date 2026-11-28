@@ -182,6 +182,9 @@ public class PhysicsWorld : MonoBehaviour
                 if (box == null)
                     continue;
 
+
+
+
                 CollisionInfo collision =
                     CollisionDetector.CircleOBB(
                         body, box
@@ -189,6 +192,22 @@ public class PhysicsWorld : MonoBehaviour
 
                 if (!collision.isColliding)
                     continue;
+
+                // 충돌 직전 법선 방향 속력
+                float impactSpeed = Mathf.Max(
+                    0f,
+                    -Vector2.Dot(
+                        body.velocity,
+                        collision.normal
+                    )
+                );
+
+                if (body.TryGetComponent<Product>(
+                    out Product product))
+                {
+                    product.CheckDamage(impactSpeed);
+                }
+
 
                 // 5. 충돌 반응
                 CollisionResolver.Resolve(

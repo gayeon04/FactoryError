@@ -959,7 +959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa9bfdc71f1d6aa4789b29ff77ac8a1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectSize: {x: 1.7, y: 1.6}
+  collectSize: {x: 1.78, y: 1.7}
   acceptAll: 0
   targetType: 1
   collectedCount: 0
@@ -6986,6 +6986,7 @@ MonoBehaviour:
   rotationStep: 15
   collectors:
   - {fileID: 384149182}
+  - {fileID: 134243503}
   buildMin: {x: -8, y: -4}
   buildMax: {x: 8, y: 4}
   canBuild: 1

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageID: 3
   stageName: Fragile Cargo
-  description: 
-  initialBudget: 150
-  runDuration: 40
-  requiredProducts: 20
+  description: "\uD30C\uC190 \uC704\uD5D8 \uC81C\uD488"
+  initialBudget: 60
+  runDuration: 50
+  requiredProducts: 15
   availableDevices:
   - {fileID: 11400000, guid: 0347c7f1d504d844780e93269c489d7b, type: 2}
   - {fileID: 11400000, guid: 0f58df9b53bd48544be27108e7ef92f0, type: 2}
   - {fileID: 11400000, guid: 7996ce06037848741bf6b2cd51346095, type: 2}
-  nextSceneName: 
+  nextSceneName: Stage04

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee127e897def3ef499df49d4585c14fd, type: 3}
+  m_Name: SD_Stage05
+  m_EditorClassIdentifier: 
+  stageID: 5
+  stageName: Factory Overload
+  description: "\uBAA8\uB4E0 \uC0DD\uC0B0\uB77C\uC778\uC5D0 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.
+    \uD55C\uC815\uB41C \uC608\uC0B0\uC73C\uB85C \uCCA0, \uD50C\uB77C\uC2A4\uD2F1,
+    \uC720\uB9AC \uC81C\uD488\uC744 \uAC01\uAC01\uC758 \uC218\uAC70\uAE30\uB85C \uC6B4\uBC18\uD558\uACE0
+    \uC0DD\uC0B0 \uD6A8\uC728\uC744 \uCD5C\uB300\uD654\uD558\uC138\uC694."
+  initialBudget: 200
+  runDuration: 60
+  requiredProducts: 40
+  availableDevices:
+  - {fileID: 11400000, guid: 0347c7f1d504d844780e93269c489d7b, type: 2}
+  - {fileID: 11400000, guid: fa48e22510c08224db33b57bc8791681, type: 2}
+  - {fileID: 11400000, guid: 0f58df9b53bd48544be27108e7ef92f0, type: 2}
+  - {fileID: 11400000, guid: be9cf6fcd05983c44b07f54c62914ec4, type: 2}
+  - {fileID: 11400000, guid: 7996ce06037848741bf6b2cd51346095, type: 2}
+  nextSceneName: 

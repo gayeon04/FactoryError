@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee127e897def3ef499df49d4585c14fd, type: 3}
+  m_Name: SD_Stage04
+  m_EditorClassIdentifier: 
+  stageID: 4
+  stageName: Blocked Route
+  description: "\uC0DD\uC0B0\uB77C\uC778 \uC0AC\uC774\uC5D0 \uC7A5\uC560\uBB3C\uC774
+    \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4. \uC7A5\uC560\uBB3C\uC744 \uC6B0\uD68C\uD558\uB294
+    \uC0C8\uB85C\uC6B4 \uC0DD\uC0B0\uB77C\uC778\uC744 \uC124\uACC4\uD558\uC5EC \uC81C\uD488\uC744
+    \uC6B4\uBC18\uD558\uC138\uC694."
+  initialBudget: 60
+  runDuration: 50
+  requiredProducts: 15
+  availableDevices:
+  - {fileID: 11400000, guid: 0347c7f1d504d844780e93269c489d7b, type: 2}
+  - {fileID: 11400000, guid: fa48e22510c08224db33b57bc8791681, type: 2}
+  - {fileID: 11400000, guid: 0f58df9b53bd48544be27108e7ef92f0, type: 2}
+  - {fileID: 11400000, guid: be9cf6fcd05983c44b07f54c62914ec4, type: 2}
+  - {fileID: 11400000, guid: 7996ce06037848741bf6b2cd51346095, type: 2}
+  nextSceneName: Stage05

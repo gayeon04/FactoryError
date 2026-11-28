@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31bfababe38255f46a04b90b59898343, type: 3}
   m_Name: PD_Glass
   m_EditorClassIdentifier: 
-  productType: 0
+  productType: 2
   color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
   mass: 3
   radius: 0.25

@@ -16,7 +16,7 @@ MonoBehaviour:
   color: {r: 1, g: 0.6213611, b: 0, a: 1}
   mass: 1
   radius: 0.25
-  restitution: 0.7
+  restitution: 0
   isMagnetic: 0
   isFragile: 0
   breakThreshold: 5

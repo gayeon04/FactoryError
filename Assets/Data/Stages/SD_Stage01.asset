@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SD_Stage01
   m_EditorClassIdentifier: 
   stageID: 1
-  stageName: "STAGE 01 \u2014 BROKEN LINE"
+  stageName: BROKEN LINE
   description: Repair the broken production line.
   initialBudget: 100
   runDuration: 40

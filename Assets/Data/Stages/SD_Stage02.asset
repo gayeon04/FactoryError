@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageID: 2
   stageName: Sorting Error
-  description: 
+  description: "\uC7AC\uC9C8\uBCC4 \uC81C\uD488 \uBD84\uB958"
   initialBudget: 120
-  runDuration: 40
+  runDuration: 50
   requiredProducts: 20
   availableDevices:
   - {fileID: 11400000, guid: 0347c7f1d504d844780e93269c489d7b, type: 2}

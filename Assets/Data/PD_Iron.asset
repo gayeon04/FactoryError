@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31bfababe38255f46a04b90b59898343, type: 3}
   m_Name: PD_Iron
   m_EditorClassIdentifier: 
-  productType: 2
+  productType: 0
   color: {r: 0, g: 0.8792124, b: 1, a: 1}
-  mass: 1.5
+  mass: 2
   radius: 0.25
-  restitution: 0.2
+  restitution: 0
   isMagnetic: 1
   isFragile: 1
   breakThreshold: 5

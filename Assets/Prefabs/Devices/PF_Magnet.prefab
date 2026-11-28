@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92857cfa65cd9b445b78041cefa5296a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 50
-  range: 4
-  maxForce: 50
+  strength: 400
+  range: 6
+  maxForce: 100
   magnetEnabled: 1
